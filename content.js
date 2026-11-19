@@ -1,0 +1,71 @@
+/* ==========================================================
+   CONTENT — edit the titles and descriptions here.
+   - file:  path to the image or video (don't change unless you rename the file)
+   - title: small heading shown in the pop-up
+   - text:  the description shown next to the image
+   - audio: (optional) sound that plays while the pop-up is open
+   To add a new image: copy one line, change the file path.
+   ========================================================== */
+
+window.ITEMS = [
+  // ---------- images ----------
+  { file: "images/homepage/0C969000-0A99-427A-9D12-8C26E02789C4_1_105_c.jpeg", title: "boba", text: "I went to visit my brother in California, there was a boba store near him and it was surprisingly good." },
+  { file: "images/homepage/0E701296-05E0-4777-98BE-E5676EE9BDFC.jpeg", title: "poem", text: "A poem I found on pinterest honestly. There was a comment that said they weren't sure whether it was meant to be funny or not. I had this as my lock screen for a while." },
+  { file: "images/homepage/0F0D0155-4338-462A-AC8D-56C44B401E89_1_105_c.jpeg", title: "furries in spirit halloween", text: "They're appropriating furry culture :,0." },
+  { file: "images/homepage/10443A17-F3E0-410D-B0C8-0770C8F30A74_1_201_a.jpeg", title: "im a comedy genius", text: "I only knew the georgian alphabet so I would just send stuff in spanish. This reads 'muy bien'." },
+  { file: "images/homepage/22590945-B7CA-41DD-9290-B572316E32AA_1_105_c.jpeg", title: "paper friends", text: "The notes I keep above my bed. They watch me(?)" },
+  { file: "images/homepage/290E2A3E-C3FB-46D3-AAD0-3D09995E9D23_1_105_c.jpeg", title: "calpoly", text: "my first college football game." },
+  { file: "images/homepage/2AF74F06-B850-414F-B848-ACB7603C1895_1_102_o.jpeg", title: "dr seuss grass", text: "First time at popocatepetl." },
+  { file: "images/homepage/2B6F79AD-E833-4A64-9E48-45E9E7BC003B_1_102_o.jpeg", title: "finger", text: "One of my first tattoos I did. The results are questionable but I don't mind." },
+  { file: "images/homepage/2D18D548-EB36-4ABD-B40C-8954A675E16A.jpeg", title: "georgian alphabet", text: "I got a little obsessed." },
+  { file: "images/homepage/3028BC90-E41D-4A3F-B966-9C1B68FD4586_1_105_c.jpeg", title: "untitled", text: "I was told to listen to this song and watch the last unicorn. I liked it." },
+  { file: "images/homepage/34DAC696-B677-488F-AD45-1ADDF9750EEE_1_105_c.jpeg", title: "esquites", text: "Maruchan esquites at the Tlaxcala Feria." },
+  { file: "images/homepage/36BD4768-B3F9-4DF2-BB15-B348B8B04999_1_105_c.jpeg", title: "día de los muertos", text: "A beautiful altar in Tlaxcala. Thank u Dai." },
+  { file: "images/homepage/3E029905-FE47-4A96-BD65-CFF6C84D5429_1_105_c.jpeg", title: "market during mexican independence day", text: "The most mexican street ever." },
+  { file: "images/homepage/427BC04D-7ACF-4A64-A890-E83BD63120E6_1_105_c.jpeg", title: "layers and layers of posters", text: "The visual passage of time." },
+  { file: "images/homepage/4E85CC8E-DA5E-4D9A-A42C-5ABF28B5C726_1_105_c.jpeg", title: "cute", text: "" },
+  { file: "images/homepage/55B320A9-BEDB-40A0-9738-030688A4EDCE_1_105_c.jpeg", title: "my last meal", text: "esquites, dominos pizza, fuze tea." },
+  { file: "images/homepage/56A16A18-0120-41CB-8DD9-9D36A52D56BA_1_105_c.jpeg", title: "#fantasy", text: "I went hiking with my dad. I saw this path and wanted to take a picture so I told him to get out of the way but now I wish he was in the picture." },
+  { file: "images/homepage/56B4FD7E-5B3C-4EF2-8047-0FE9E0FE8FAB_1_102_o.jpeg", title: "abs", text: "I found this on the street in Coyoacan. Why?" },
+  { file: "images/homepage/5EBF883D-82BD-4BD5-9571-03599D9B1E39_1_105_c.jpeg", title: "a strange party", text: "where I didn't know anyone" },
+  { file: "images/homepage/6D4A6A65-A532-49AB-9D84-FC1B72004F0D_1_102_o.jpeg", title: "ash tray (?)", text: "I want to make this myself but I'm not sure if that's immoral" },
+  { file: "images/homepage/6D5ED7E9-0FC1-4ABF-9EF8-9732F58862E3_1_102_o.jpeg", title: "eggplant", text: "I made a lot of japanese food this semester." },
+  { file: "images/homepage/72B43F5A-CEF3-44FB-805D-199F5A57667E_1_102_o.jpeg", title: "lonely window", text: "I really like singular windows because they look so midwest emo. Why is there only one window on the whole wall?" },
+  { file: "images/homepage/7C8032CE-EB67-4DA9-84D2-3BF3FCF71834_1_105_c.jpeg", title: "poster1", text: "Dai asked me why I was taking pictures of all these posters." },
+  { file: "images/homepage/8549E1C0-FCE1-408C-B53F-50DCCFE20E77_1_105_c.jpeg", title: "tamales", text: "I don't think I'll ever get why people are so willing to share their food with me." },
+  { file: "images/homepage/860EBD9F-EA23-4E9C-9F36-403D42C2CCB2_1_102_o.jpeg", title: "backrooms aaaa", text: "These stairs didn't go anywhere." },
+  { file: "images/homepage/8D6A239F-9840-474E-A096-971576BF298F_1_105_c.jpeg", title: "cookies", text: "Some of the most beautiful cookies ever. The milk is mixed with cinammon crunch cereal." },
+  { file: "images/homepage/8F196038-4311-462D-A32D-AADE07D668F9_1_105_c.jpeg", title: "untitled", text: "I like this song" },
+  { file: "images/homepage/9F4B042F-6E81-425D-A81C-37F80DCBB231_1_102_o.jpeg", title: "album?", text: "I took a picture of this because I told myself I would try to listen to it. The cover's cool." },
+  { file: "images/homepage/A6817944-AE61-4C7A-AE60-32B78043291D_1_105_c.jpeg", title: "estas en una edad maravillosa...", text: "I don't like therapy speak." },
+  { file: "images/homepage/B78A495A-375B-4AA5-8E74-13341268355F_1_102_o.jpeg", title: "thanks dad", text: "The little crabs in the tidepools made me happy." },
+  { file: "images/homepage/C4E6DFF5-0A8B-4EAB-8152-9B5D9ABDEA45_1_201_a.jpeg", title: "untitled", text: "I still can't pronounce this..." },
+  { file: "images/homepage/CD09D871-EB8D-4271-B546-688CE3C0732D_1_105_c.jpeg", title: "i don't remember", text: "I wasn't completely concious when I made this but I like it." },
+  { file: "images/homepage/CF905C45-2D65-4A1A-A30F-D4BA0FBF2239_1_102_o.jpeg", title: "rococo", text: "This cake is a work of art. It tasted like what I would imagine the 1950s taste like." },
+  { file: "images/homepage/E159209F-E7DE-452D-B303-B4FC2A552014_1_105_c.jpeg", title: "poster2", text: "I couldn't really tell her why I liked them so much." },
+  { file: "images/homepage/F0AB40DC-9675-4ACD-ADCA-E3F43D539A40_1_105_c.jpeg", title: "longaniza verde", text: "Some of the best tacos I ever had. I left school to go eat with my dad." },
+  { file: "images/homepage/F649CAA8-9830-4465-A416-4D840929C6FD_1_102_o.jpeg", title: "shabu-shabu", text: "This is definitely not how you cook this. It looks surreal I think." },
+  { file: "images/homepage/F6B97656-10F5-463A-AEC4-3A4EEB40AAF1_1_105_c.jpeg", title: "poster3", text: "I think they're comforting for some reason?" },
+  { file: "images/homepage/FBFB0E09-70DA-4E1C-874F-D3632DBF3C5C_1_105_c.jpeg", title: "Mariana Bridge", text: "Got my arm signed." },
+  { file: "images/homepage/FD6D2B8E-E11B-481D-8D3C-CE535286C577_1_105_c.jpeg", title: "dad", text: "My basement flooded and my camera bag got wet. When I looked through it there was an old passport picture of my dad, which makes sense 'cause the bag was his. I guess he never looked through it before giving it to me." },
+  { file: "images/homepage/myroom.jpeg", title: "my room", text: "I was happy with how my room looked, and I remembered when I would decorate pretend apartments when I was little. I think my room represents me well right now. The audio I thought was sweet, and was recorded on the street just outside.", audio: "audio/Calle Villahermosa 7.m4a" },
+  { file: "images/homepage/tattoo.jpeg", title: "tattoo", text: "I got really obsessed with this song by Elliott Smith, and in general with his music. I tattoed the lyrics to this song on my wrist one night when I felt like shit. Later I went with my friends to a club and they stamped a drugged mickey mouse over it.", audio: "audio/Elliott Smith - Pitseleh.mp3" },
+  // ---------- videos (15 s cuts; sound plays only in the pop-up) ----------
+  { file: "videos/15s/256e26a84a9e4508a49d65259e374b62.mp4", title: "art", text: "I really liked this person's art. The videos made me want to travel.", video: true },
+  { file: "videos/15s/361d7f36819c4a68a8c295d8a069fea1.mp4", title: "celebrations in Serbia", text: "Reminds me of when the knicks won", video: true },
+  { file: "videos/15s/404a7bb6308e477abd7286038302e22f.mp4", title: "mona china?", text: "Honestly I have no idea what this is but I love it.", video: true },
+  { file: "videos/15s/4bcd9d1b2a894c8b84d91b44d9fb1609.mp4", title: "childhood dreams", text: "When I was a little girl, I wanted to be a chubby old trucker man and drink beer and spit on the floor and laugh really loud and this reminds me of that.", video: true },
+  { file: "videos/15s/84ee2902394942aca2672e7921c4f7be.mp4", title: "muuusic", text: "A creative mix of analog and digital.", video: true },
+  { file: "videos/15s/deb08bb7ef0843b0bd7f51d2a544a3a8.mp4", title: "projections", text: "This video made me feel really lonely.", video: true },
+  { file: "videos/15s/ee856298498e40ff80b0232317cabd01.mp4", title: "jajaja", text: "One day I'll sound lke this I think...", video: true },
+  { file: "videos/15s/IMG_2547_2.mp4", title: "EQ1", text: "Very good music and visually fascinating to me.", video: true },
+  { file: "videos/15s/IMG_2552_2.mp4", title: "EQ2", text: "Quedé así :0", video: true },
+  //{ file: "videos/15s/IMG_2568_2.mp4", title: "EQ3", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", video: true },
+  { file: "videos/15s/IMG_5049.mp4", title: "altar under waterfall", text: "The whole mountain is covered in religious artifacts, but beneath a waterfall is especially impressive.", video: true },
+  { file: "videos/15s/IMG_5178.mp4", title: "dancing", text: "It's so easy to find people dancing on the street here.", video: true },
+  { file: "videos/15s/IMG_5227.mp4", title: "goth drama", text: "I didn't love the show but the fog looked epic.", video: true },
+  { file: "videos/15s/IMG_5288.mp4", title: "mountain chicken", text: "I love my dad cause he needs to bring a bag of chicken when we go hiking. It was some of the best chicken I've ever had.", video: true },
+  { file: "videos/15s/IMG_5291.mp4", title: "how are you supposed to eat rice out of a bag?", text: "The chicken my dad bought came with rice and I'm pretty sure that's not how you're supposed to eat it but I was just copying the guide. When I got here I copied a lot of people's mannerisms because I didn't want to stand out.", video: true },
+  { file: "videos/15s/IMG_5473_2.mp4", title: "palo santo", text: "This palo santo kinda smelled like a hot dog also I need to organize my playlists.", video: true },
+  { file: "videos/15s/IMG_5482_2.mp4", title: "meatmeatmeat", text: "He came on an hour late and barely played his own songs but it's okay.", video: true },
+];

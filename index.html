@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bitácora 5to semestre</title>
+<style>
+  @font-face {
+    font-family: "Kristina";
+    src: url("fonts/Kristina.Bold.otf") format("opentype");
+    font-weight: 700;
+  }
+  :root {
+    --bg: #ffffff;
+    --ink: #111111;
+    --muted: #8a8a8a;
+    --line: #111111;
+    --label: 15px;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%; overflow: hidden;
+    background: var(--bg); color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  /* ---------- 3D stage ---------- */
+  #stage {
+    position: fixed; inset: 0; cursor: grab;
+    user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  #stage ::selection { background: transparent; }
+  .label, #help { user-select: none; -webkit-user-select: none; }
+  #stage.dragging { cursor: grabbing; }
+  .particle {
+    display: block; width: 115px; cursor: pointer;
+    will-change: opacity; user-select: none; -webkit-user-drag: none;
+  }
+  .particle img, .particle video {
+    display: block; width: 100%; height: auto; pointer-events: none;
+  }
+  .particle:hover { outline: 1px solid var(--ink); }
+
+  /* ---------- fixed labels ---------- */
+  .label {
+    position: fixed; left: 20px; z-index: 10;
+    font-family: "Kristina", sans-serif; font-weight: 700;
+    font-size: var(--label); line-height: 1.1; letter-spacing: .01em;
+    margin: 0; pointer-events: none;
+  }
+  #title  { top: 18px; }
+  #author { bottom: 18px; }
+  #help {
+    position: fixed; left: 20px; top: 50%; transform: translateY(-50%);
+    z-index: 10; margin: 0; pointer-events: none;
+    font-size: 11px; line-height: 1.7; color: var(--muted);
+    letter-spacing: .02em;
+  }
+  #help kbd {
+    font-family: inherit; color: var(--ink);
+    display: inline-block; min-width: 4.2em;
+  }
+
+  /* ---------- pop-up ---------- */
+  #overlay {
+    position: fixed; inset: 0; z-index: 20;
+    display: none; align-items: center; justify-content: center;
+    background: rgba(255,255,255,.55);
+    backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  }
+  #overlay.open { display: flex; }
+  #popup {
+    position: relative; background: var(--bg);
+    border: 1px solid var(--line);
+    display: flex; gap: 28px; align-items: flex-start;
+    padding: 44px 32px 32px 32px;
+    max-width: min(1000px, 92vw); max-height: 88vh;
+  }
+  #close {
+    position: absolute; top: 10px; left: 10px;
+    width: 22px; height: 22px; padding: 0;
+    background: none; border: 0; cursor: pointer;
+  }
+  #close svg { display: block; width: 100%; height: 100%; }
+  #media img, #media video {
+    display: block; max-width: min(560px, 55vw); max-height: 72vh;
+    width: auto; height: auto;
+  }
+  #info { width: 240px; flex-shrink: 0; }
+  #info h2 {
+    font-family: "Kristina", sans-serif; font-weight: 700;
+    font-size: var(--label); margin: 0 0 12px 0;
+  }
+  #info p { font-size: 12px; line-height: 1.55; margin: 0; }
+
+  @media (max-width: 700px) {
+    #popup { flex-direction: column; overflow-y: auto; padding: 44px 16px 20px; }
+    #media img, #media video { max-width: 100%; max-height: 50vh; }
+    #info { width: auto; }
+    #help { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stage"></div>
+
+<h1 class="label" id="title">bitácora 5to semestre</h1>
+<p class="label" id="author">dalia thornburgh</p>
+
+<p id="help">
+  <kbd>w / s</kbd> move closer / farther<br>
+  <kbd>a / d</kbd> circle around<br>
+  <kbd>drag</kbd> tilt the view<br>
+  <kbd>tab</kbd> recenter<br>
+  <kbd>click</kbd> open an image
+</p>
+
+<div id="overlay">
+  <div id="popup" role="dialog" aria-modal="true">
+    <button id="close" aria-label="close">
+      <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.2">
+        <line x1="5" y1="5" x2="17" y2="17"/><line x1="17" y1="5" x2="5" y2="17"/>
+      </svg>
+    </button>
+    <div id="media"></div>
+    <div id="info"><h2></h2><p></p></div>
+  </div>
+</div>
+
+<!-- edit descriptions in content.js -->
+<script src="content.js"></script>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+
+<script type="module">
+import * as THREE from "three";
+import { CSS3DRenderer, CSS3DSprite } from "three/addons/renderers/CSS3DRenderer.js";
+
+/* ================= settings ================= */
+const CFG = {
+  cloudRadius: 900,        // how far particles travel before fading
+  lifeMin: 22, lifeMax: 38,// seconds each particle lives
+  sizeMin: 0.4, sizeMax: 1.35,
+  fadeIn: 0.08,            // fraction of life spent fading in
+  fadeOut: 0.35,           // fraction of life spent fading out
+  camDefault: { r: 1700, theta: 0, phi: Math.PI / 2 },
+  camMinR: 250,
+  camMaxR: 2600,           // keeps the cloud from shrinking out of view
+  moveSpeed: 900,          // units / second for w/s
+  orbitSpeed: 0.9,         // radians / second for a/d
+};
+
+/* ================= scene ================= */
+const stage = document.getElementById("stage");
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 1, 10000);
+const renderer = new CSS3DRenderer();
+renderer.setSize(innerWidth, innerHeight);
+stage.appendChild(renderer.domElement);
+
+/* ================= particles ================= */
+// content.js lists videos/15s/NAME.mp4; the cloud uses videos/15s/small/NAME.mp4
+// and every video has a still frame at videos/15s/posters/NAME.jpg
+const smallSrc  = (f) => f.replace("videos/15s/", "videos/15s/small/");
+const posterSrc = (f) => f.replace("videos/15s/", "videos/15s/posters/").replace(/\.mp4$/i, ".jpg");
+const rand = (a, b) => a + Math.random() * (b - a);
+const particles = [];
+
+function randomDir() {
+  // uniform direction on a sphere, slightly flattened vertically like the reference
+  const u = rand(-1, 1), t = rand(0, Math.PI * 2), s = Math.sqrt(1 - u * u);
+  return new THREE.Vector3(s * Math.cos(t), u * 0.75, s * Math.sin(t)).normalize();
+}
+
+function respawn(p, initial = false) {
+  p.dir = randomDir();
+  p.life = rand(CFG.lifeMin, CFG.lifeMax);
+  p.dist = CFG.cloudRadius * rand(0.55, 1.1);
+  p.age = initial ? Math.random() * p.life : 0;   // stagger at load so the cloud is already full
+  p.origin = new THREE.Vector3(rand(-30, 30), rand(-30, 30), rand(-30, 30));
+  const s = rand(CFG.sizeMin, CFG.sizeMax);
+  p.obj.scale.set(s, s, s);
+}
+
+ITEMS.forEach((item, i) => {
+  const el = document.createElement("div");
+  el.className = "particle";
+  // videos show a still frame in the cloud; the video itself plays only in the pop-up
+  const media = document.createElement("img");
+  media.src = item.video ? posterSrc(item.file) : item.file;
+  media.loading = "eager"; media.decoding = "async"; media.alt = item.title || "";
+  media.draggable = false;
+  el.appendChild(media);
+  el.dataset.index = i;
+
+  const obj = new CSS3DSprite(el);
+  scene.add(obj);
+  const p = { obj, el, media, item };
+  respawn(p, true);
+  particles.push(p);
+});
+
+function updateParticles(dt) {
+  for (const p of particles) {
+    p.age += dt;
+    if (p.age >= p.life) respawn(p);
+    const t = p.age / p.life;
+    const eased = 1 - Math.pow(1 - t, 2);           // slow down as they drift outward
+    p.obj.position.copy(p.origin).addScaledVector(p.dir, eased * p.dist);
+    let o = 1;
+    if (t < CFG.fadeIn) o = t / CFG.fadeIn;
+    else if (t > 1 - CFG.fadeOut) o = (1 - t) / CFG.fadeOut;
+    p.el.style.opacity = o.toFixed(3);
+    p.el.style.pointerEvents = o < 0.15 ? "none" : "auto";
+  }
+}
+
+/* ================= camera: orbit around the cloud ================= */
+const cam = { ...CFG.camDefault };     // current
+const goal = { ...CFG.camDefault };    // target (eased toward)
+const keys = new Set();
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+function updateCamera(dt) {
+  if (keys.has("w")) goal.r -= CFG.moveSpeed * dt;
+  if (keys.has("s")) goal.r += CFG.moveSpeed * dt;
+  if (keys.has("a")) goal.theta -= CFG.orbitSpeed * dt;
+  if (keys.has("d")) goal.theta += CFG.orbitSpeed * dt;
+  goal.r = clamp(goal.r, CFG.camMinR, CFG.camMaxR);
+  goal.phi = clamp(goal.phi, 0.25, Math.PI - 0.25);
+
+  const k = 1 - Math.pow(0.0015, dt);   // smooth easing
+  cam.r += (goal.r - cam.r) * k;
+  cam.theta += (goal.theta - cam.theta) * k;
+  cam.phi += (goal.phi - cam.phi) * k;
+
+  camera.position.set(
+    cam.r * Math.sin(cam.phi) * Math.sin(cam.theta),
+    cam.r * Math.cos(cam.phi),
+    cam.r * Math.sin(cam.phi) * Math.cos(cam.theta)
+  );
+  camera.lookAt(0, 0, 0);   // always aimed at the cloud's spawn point
+}
+
+function recenter() {
+  // take the shortest way back around
+  const full = Math.PI * 2;
+  goal.theta = cam.theta - (((cam.theta % full) + full) % full);
+  if (goal.theta - cam.theta < -Math.PI) goal.theta += full;
+  goal.r = CFG.camDefault.r; goal.phi = CFG.camDefault.phi;
+}
+
+/* ================= input ================= */
+let popupOpen = false;
+
+addEventListener("keydown", (e) => {
+  if (e.key === "Tab") { e.preventDefault(); if (!popupOpen) recenter(); return; }
+  if (e.key === "Escape" && popupOpen) { closePopup(); return; }
+  const k = e.key.toLowerCase();
+  if (!popupOpen && "wasd".includes(k) && k.length === 1) keys.add(k);
+});
+addEventListener("keyup", (e) => keys.delete(e.key.toLowerCase()));
+addEventListener("blur", () => keys.clear());
+
+let drag = null;
+let lastDragMoved = 0;
+stage.addEventListener("pointerdown", (e) => {
+  drag = { x: e.clientX, y: e.clientY, moved: 0 };
+});
+stage.addEventListener("mousedown", (e) => e.preventDefault());   // no text/image selection while dragging
+addEventListener("pointermove", (e) => {
+  if (!drag || popupOpen) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  drag.moved += Math.abs(dx) + Math.abs(dy);
+  if (drag.moved > 4) stage.classList.add("dragging");
+  goal.theta -= dx * 0.005;
+  goal.phi -= dy * 0.005;
+  drag.x = e.clientX; drag.y = e.clientY;
+});
+addEventListener("pointerup", () => {
+  lastDragMoved = drag ? drag.moved : 0;
+  drag = null; stage.classList.remove("dragging");
+});
+// open on a real "click" — Safari only lets sound start inside a click
+stage.addEventListener("click", (e) => {
+  const target = e.target.closest(".particle");
+  if (!target || popupOpen || lastDragMoved > 4) return;
+  openPopup(particles[+target.dataset.index]);
+});
+document.addEventListener("selectstart", (e) => { if (!e.target.closest?.("#popup")) e.preventDefault(); });
+document.addEventListener("dragstart", (e) => e.preventDefault());
+stage.addEventListener("wheel", (e) => { e.preventDefault(); goal.r += e.deltaY; }, { passive: false });
+
+/* ================= pop-up ================= */
+const overlay = document.getElementById("overlay");
+const mediaBox = document.getElementById("media");
+const titleEl = document.querySelector("#info h2");
+const textEl = document.querySelector("#info p");
+let currentAudio = null;
+
+// load the songs ahead of time so they start instantly when a pop-up opens
+const audioCache = {};
+ITEMS.forEach((item) => {
+  if (item.audio && !audioCache[item.audio]) {
+    const a = new Audio(); a.preload = "auto"; a.loop = true; a.src = item.audio;
+    audioCache[item.audio] = a;
+  }
+});
+
+function openPopup(p) {
+  popupOpen = true; keys.clear();
+  const { item } = p;
+  mediaBox.innerHTML = "";
+  if (item.video) {
+    const v = document.createElement("video");
+    Object.assign(v, { src: item.file, poster: posterSrc(item.file), loop: true, playsInline: true, controls: false, muted: false });
+    v.addEventListener("click", () => (v.paused ? v.play() : v.pause()));
+    // fallbacks: full version -> lighter version -> still frame
+    v.addEventListener("error", () => {
+      if (!v.dataset.fallback) { v.dataset.fallback = 1; v.src = smallSrc(item.file); v.play().catch(() => {}); }
+      else { const img = document.createElement("img"); img.src = posterSrc(item.file); v.replaceWith(img); }
+    });
+    mediaBox.appendChild(v);
+    v.play().catch(() => {});        // sound only plays here, in the pop-up
+  } else {
+    const img = document.createElement("img");
+    img.src = item.file; img.alt = item.title || "";
+    mediaBox.appendChild(img);
+  }
+  titleEl.textContent = item.title || "";
+  textEl.textContent = item.text || "";
+
+  if (item.audio) {
+    currentAudio = audioCache[item.audio];
+    currentAudio.currentTime = 0;
+    currentAudio.play().catch((err) => console.warn("audio could not play:", item.audio, err));
+  }
+  overlay.classList.add("open");
+}
+
+function closePopup() {
+  overlay.classList.remove("open");
+  mediaBox.querySelectorAll("video").forEach((v) => { v.pause(); v.removeAttribute("src"); v.load(); });
+  mediaBox.innerHTML = "";
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  popupOpen = false;
+  last = performance.now();
+}
+
+document.getElementById("close").addEventListener("click", closePopup);
+overlay.addEventListener("click", (e) => { if (e.target === overlay) closePopup(); });
+
+/* ================= loop ================= */
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min((now - last) / 1000, 0.05);
+  last = now;
+  if (!popupOpen) updateParticles(dt);     // animation pauses while a pop-up is open
+  updateCamera(dt);
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+addEventListener("resize", () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>
